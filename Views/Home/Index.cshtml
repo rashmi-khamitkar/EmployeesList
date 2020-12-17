@@ -1,0 +1,53 @@
+﻿@model IEnumerable<EmployeesList.Models.Employee>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Employees List</h2>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            Find by department: <input type="text" name="searchDepartment" value="@ViewData["DepartmentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+@if (Model.Count() > 0)
+{
+    @foreach (var data in Model.GroupBy(p => p.DepartmentName))
+    {
+        <div style="color:lightgreen;padding: 5px;display:block;position:relative;font-size:24px">
+            @data.FirstOrDefault().DepartmentName
+        </div>
+        <div style="display:flex">
+            @foreach (var item in data)
+            {
+                <div style="float: left; width: 50%; padding: 5px;">
+                    <div style="float: left; width: 20%; padding: 5px;"><img style="border-radius: 50%;width:90%" src="../images/@item.ProfileImage" alt="image" /></div>
+                    <div style="float: left; width: 80%; padding: 5px;">
+                        <div class="employeename" style="color:lightgreen;font-size:20px">@item.FirstName @item.LastName</div>
+                        <div style="font-size:14px;color:grey">@item.SubDepartmentName</div>
+                        <div style="overflow-wrap:break-word;font-size: 12px;color: grey">@item.Bio</div>
+                        <div style="margin: 24px 0;">
+                            <a href="@item.TwitterProfileLink" class="socialmedia" style="color:grey"><i class="fa fa-twitter"></i></a>
+                            <a href="@item.FBProfileLink" class="socialmedia" style="color:grey"><i class="fa fa-facebook"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div style="color:lightgreen;padding: 5px;display:block;position:relative;font-size:24px">
+        No Data Found
+    </div>
+}
+
+
